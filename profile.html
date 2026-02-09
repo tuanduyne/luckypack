@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Lì Xì Tết</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle, #ffefc1, #ff3d3d);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.card {
+  width: 360px;
+  height: 580px;
+  background: linear-gradient(135deg, #c71d1d, #b71c1c);
+  border-radius: 20px;
+  text-align: center;
+  color: #ffd700;
+  box-shadow: 0 20px 60px rgba(0,0,0,.6), 
+              0 0 40px rgba(255,215,0,.3),
+              inset 0 1px 0 rgba(255,255,255,.1);
+  padding: 20px;
+  transform-style: preserve-3d;
+  transform: translateZ(50px);
+  position: relative;
+}
+
+h1 { margin: 5px 0; }
+
+/* ===== PHONG BAO ===== */
+.envelope {
+  width: 260px;
+  height: 170px;
+  background: linear-gradient(135deg, #d32f2f, #c62828);
+  margin: 20px auto;
+  position: relative;
+  border-radius: 0 0 15px 15px;
+  overflow: visible;
+  z-index: 1;
+  box-shadow: 0 15px 40px rgba(0,0,0,.7), 
+              0 0 30px rgba(0,0,0,.4),
+              inset 0 1px 0 rgba(255,255,255,.2),
+              -5px 10px 20px rgba(0,0,0,.5);
+  border: 3px solid #b71c1c;
+  transform-style: preserve-3d;
+  transform: translateZ(20px) rotateY(-2deg);
+}
+
+.envelope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255,215,0,.1),
+    rgba(255,215,0,.1) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  z-index: 0;
+}
+
+.envelope::after {
+  content: "🎊";
+  position: absolute;
+  font-size: 60px;
+  opacity: 0.15;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e53935, #d32f2f);
+  clip-path: polygon(0 0, 100% 0, 50% 55%);
+  transform-origin: top;
+  transform: rotateX(0deg) translateZ(0);
+  transition: transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 2;
+  box-shadow: inset 0 0 10px rgba(0,0,0,.3), 0 5px 15px rgba(0,0,0,.4);
+  transform-style: preserve-3d;
+}
+
+.flap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255,215,0,.15),
+    rgba(255,215,0,.15) 3px,
+    transparent 3px,
+    transparent 8px
+  );
+}
+
+.envelope.open .flap {
+  transform: rotateX(160deg) translateZ(30px);
+}
+
+.envelope {
+  perspective: 800px; /* ⭐ QUAN TRỌNG */
+}
+
+.body {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: #c62828;
+  z-index: 1;
+}
+
+/* ===== TIỀN VIỆT (AI STYLE) ===== */
+.money-area {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  min-height: 80px;
+  position: relative;
+  z-index: 5;
+}
+
+.money {
+  width: 140px;
+  height: 65px;
+  background: linear-gradient(135deg, #1b5e20, #66bb6a);
+  border-radius: 6px;
+  border: 2px solid rgba(255,255,255,.4);
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.15),
+              0 10px 25px rgba(0,0,0,.5),
+              0 0 15px rgba(0,0,0,.3);
+  position: relative;
+  color: #fff;
+  animation: flyUp 0.8s ease forwards;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background-size: cover;
+  background-position: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,.5);
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+  perspective: 600px;
+}
+
+/* hoa văn nền */
+.money::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,.05),
+      rgba(255,255,255,.05) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+}
+
+/* chữ quốc hiệu */
+.money .title {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  right: 0;
+  font-size: 9px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+/* mệnh giá */
+.money .value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* ký hiệu ₫ */
+.money .currency {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.money:hover {
+  transform: translateZ(10px) rotateX(-5deg) rotateY(5deg);
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.15),
+              0 15px 35px rgba(0,0,0,.6),
+              0 0 20px rgba(255,215,0,.4);
+}
+
+@keyframes flyUp {
+  from {
+    transform: translateY(80px) rotateX(-40deg) rotateY(-30deg) scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) rotateX(0) rotateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-5px) rotate(-1deg); }
+  50% { transform: translateX(5px) rotate(1deg); }
+  75% { transform: translateX(-3px) rotate(-0.5deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,215,0,.7); }
+  50% { box-shadow: 0 0 0 10px rgba(255,215,0,0); }
+}
+
+button {
+  margin-top: 15px;
+  padding: 12px 30px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  background: gold;
+}
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: gold;
+  top: -10px;
+  animation: fall 3s linear forwards;
+  opacity: 0.9;
+  z-index: 999;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.money-text {
+  font-size: 36px;
+  margin-top: 10px;
+  color: white;
+  display: none;
+}
+.card.pop {
+  animation: pop 0.4s ease, shake 0.6s ease 0.4s, pulse 0.8s ease 0.4s;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>🧧 LÌ XÌ MAY MẮN 🧧</h1>
+
+  <div class="envelope" id="envelope">
+    <div class="flap"></div>
+    <div class="body"></div>
+  </div>
+
+  <button onclick="openLucky()">MỞ BAO LÌ XÌ</button>
+
+  <div class="money-text" id="moneyText">0đ</div>
+  <div class="money-area" id="moneyArea"></div>
+</div>
+
+<script>
+let opened = false;
+
+function getWeightedAmount() {
+  const rand = Math.random();
+  
+  // 10k, 20k, 30k: 50%
+  if (rand < 0.50) {
+    const amounts = [10000, 20000, 30000];
+    return amounts[Math.floor(Math.random() * amounts.length)];
+  }
+  // 40k, 50k: 30%
+  else if (rand < 0.80) {
+    const amounts = [40000, 50000];
+    return amounts[Math.floor(Math.random() * amounts.length)];
+  }
+  // 60k, 70k, 80k: 15%
+  else if (rand < 0.95) {
+    const amounts = [60000, 70000, 80000];
+    return amounts[Math.floor(Math.random() * amounts.length)];
+  }
+  // 90k, 100k: 5%
+  else {
+    const amounts = [90000, 100000];
+    return amounts[Math.floor(Math.random() * amounts.length)];
+  }
+}
+
+function openLucky() {
+  if (opened) return;
+  opened = true;
+
+  const amount = getWeightedAmount();
+
+  document.getElementById("envelope").classList.add("open");
+  document.getElementById("moneyText").style.display = "block";
+  document.querySelector(".card").classList.add("pop");
+
+  let current = 0;
+  const moneyText = document.getElementById("moneyText");
+
+  const timer = setInterval(() => {
+    current += Math.ceil(amount / 30);
+    if (current >= amount) {
+      current = amount;
+      clearInterval(timer);
+      showMoney(amount);
+      shootConfetti();
+    }
+    moneyText.innerText = current.toLocaleString() + "đ";
+  }, 30);
+}
+
+function showMoney(amount) {
+  const area = document.getElementById("moneyArea");
+  area.innerHTML = "";
+
+  let remain = amount;
+  const bills = [];
+
+  while (remain >= 50000) { bills.push(50000); remain -= 50000; }
+  while (remain >= 20000) { bills.push(20000); remain -= 20000; }
+  while (remain >= 10000) { bills.push(10000); remain -= 10000; }
+
+  // Vietnamese currency colors and designs
+  const billStyles = {
+    10000: { color: '#ff6b35', image: '🏛️' },
+    20000: { color: '#004687', image: '🏛️' },
+    50000: { color: '#c60c30', image: '🏛️' }
+  };
+
+  bills.forEach((v, i) => {
+    const bill = document.createElement("div");
+    bill.className = "money";
+    bill.style.animationDelay = (i * 0.15) + "s";
+    
+    const style = billStyles[v];
+    bill.style.background = `linear-gradient(135deg, ${style.color}, ${style.color}cc)`;
+
+    bill.innerHTML = `
+      <div style="font-size: 24px; margin-bottom: 4px;">${style.image}</div>
+      <div style="font-size: 14px; letter-spacing: 1px;">₫ ${v.toLocaleString()}</div>
+      <div style="font-size: 10px; opacity: 0.8; margin-top: 2px;">VIỆT NAM</div>
+    `;
+
+    area.appendChild(bill);
+  });
+}
+function shootConfetti() {
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    const colors = ["gold", "#ff5252", "#4caf50", "#2196F3", "#FF9800", "#E91E63"];
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDuration = (2 + Math.random() * 2) + "s";
+    c.style.width = (4 + Math.random() * 6) + "px";
+    c.style.height = c.style.width;
+    c.style.opacity = 0.7 + Math.random() * 0.3;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
+
+</script>
+
+</body>
+</html>
